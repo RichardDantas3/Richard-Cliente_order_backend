@@ -1,19 +1,30 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-const PORT = 3000;
 const app = express();
 
-const clientRoutes = require('./routes/clients');
-app.use('/api/clients', clientRoutes);
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/',(req,res) =>{
+const clientRoutes = require('./routes/clients');
+const orderRoutes = require('./routes/orders');
+
+app.use('/api/clients', clientRoutes);
+app.use('/api/orders', orderRoutes)
+
+app.get('/',(req, res) =>{
     res.json({
-        message:'Servidor de API funcionando'
+        message:'API funcionando',
+        timestamp: new Date().toISOString()
     });
 });
 
-app.listen(PORT, ()=>{
-    console.log(`Server funcionando em http://localhost:${PORT}`);
-    console.log(`Server funcionando em http://localhost:${PORT}/api/clients`);
+const PORT = 3005;
+
+app.listen(PORT, () => {
+    console.log(`Server funcionando em ${PORT}`);
+    // console.log(`Server funcionando em http://localhost:${PORT}/api/clients`);
 });
 module.exports = app;
